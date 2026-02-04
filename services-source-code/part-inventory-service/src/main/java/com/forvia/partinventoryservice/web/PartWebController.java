@@ -20,6 +20,13 @@ public class PartWebController {
     private PartRepository partRepository;
 
     @GetMapping
+    public String home(Model model) {
+        model.addAttribute("parts", partRepository.findAll());
+        model.addAttribute("part", new Part());
+        return "index";
+    }
+
+    @GetMapping("/inventory")
     public String listParts(Model model) {
         model.addAttribute("parts", partRepository.findAll());
         model.addAttribute("part", new Part());
@@ -30,7 +37,7 @@ public class PartWebController {
     public String addPart(@ModelAttribute Part part) {
         part.setId(UUID.randomUUID().toString());
         partRepository.save(part);
-        return "redirect:/";
+        return "redirect:./";
     }
 
     @GetMapping("/parts/{id}/edit")
@@ -38,9 +45,9 @@ public class PartWebController {
         Optional<Part> part = partRepository.findById(id);
         if (part.isPresent()) {
             model.addAttribute("part", part.get());
-            return "edit-part"; // Assuming a new template for edit form
+            return "edit-part";
         }
-        return "redirect:/";
+        return "redirect:./";
     }
 
     @PostMapping("/parts/{id}")
@@ -55,4 +62,6 @@ public class PartWebController {
         partRepository.deleteById(id);
         return "redirect:/";
     }
+
+
 }

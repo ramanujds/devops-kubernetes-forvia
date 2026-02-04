@@ -46,6 +46,22 @@ public class PartOrderWebController {
         return "home";
     }
 
+    @GetMapping("/home")
+    public String homepageForRoute(Model model) {
+        try {
+            List<PartDto> parts = partOrderService.getAllAvailableParts();
+            parts.forEach(System.out::println);
+            model.addAttribute("parts", parts);
+        } catch (Exception e) {
+            log.error("Error fetching parts from inventory service", e);
+            model.addAttribute("error", "Unable to fetch parts from inventory service. Please try again later.");
+            model.addAttribute("parts", new ArrayList<>());
+        }
+        List<PartOrder> orders = partOrderRepository.findAll();
+        model.addAttribute("orders", orders);
+        return "home";
+    }
+
     @GetMapping("/orders")
     public String viewAllOrders(Model model) {
         List<PartOrder> orders = partOrderRepository.findAll();
@@ -53,7 +69,7 @@ public class PartOrderWebController {
         return "orders";
     }
 
-    @GetMapping("/parts")
+    @GetMapping("/available-parts")
     public String browseAvailableParts(Model model) {
         try {
             List<PartDto> parts = partOrderService.getAllAvailableParts();
@@ -63,7 +79,7 @@ public class PartOrderWebController {
             model.addAttribute("error", "Unable to fetch parts from inventory service. Please try again later.");
             model.addAttribute("parts", new ArrayList<>());
         }
-        return "parts";
+        return "available-parts";
     }
 
 
