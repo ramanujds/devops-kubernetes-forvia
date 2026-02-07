@@ -1,0 +1,11 @@
+docker pull ram1uj/part-inventory-service
+
+docker pull ram1uj/part-order-service
+
+docker pull ram1uj/part-gateway-service
+
+minikube image load ram1uj/part-inventory-service
+
+minikube image load ram1uj/part-order-service
+
+minikube image load ram1uj/part-gateway-service
