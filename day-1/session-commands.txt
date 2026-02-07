@@ -29,5 +29,5 @@ docker run -d -p 8082:8080 \
     --name part-order-service \
     --network forvia \
     -e SPRING_PROFILES_ACTIVE=dev \
-    -e PART_INVENTORY_SERVICE_URL=http://part-inventory-service:8080 \
+    -e INVENTORY_SERVICE_URL=http://part-inventory-service:8080 \
     ram1uj/part-order-service:latest
