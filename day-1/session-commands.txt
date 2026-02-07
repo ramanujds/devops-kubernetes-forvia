@@ -1,0 +1,8 @@
+docker run -d -p 8080:80 --name=web nginx
+
+
+docker run -d -p 8081:8080 --name=app ram1uj/spring-boot
+
+docker inspect app
+
+docker exec -it web curl 172.17.0.3:8080
