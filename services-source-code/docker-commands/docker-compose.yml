@@ -1,4 +1,4 @@
-name: Part Inventory and Order Services
+#name: Part Inventory and Order Services
 services:
 #  mysql:
 #    image: mysql:latest

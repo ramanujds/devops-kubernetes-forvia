@@ -6,3 +6,28 @@ docker run -d -p 8081:8080 --name=app ram1uj/spring-boot
 docker inspect app
 
 docker exec -it web curl 172.17.0.3:8080
+
+
+docker network create web-app-network
+
+docker network connect web-app-network web
+docker network connect web-app-network app
+
+docker exec -it web curl app:8080
+
+
+docker network create forvia
+
+docker run -d -p 8081:8080 \
+    --name part-inventory-service \
+    --network forvia \
+    -e SPRING_PROFILES_ACTIVE=dev \
+    ram1uj/part-inventory-service:latest
+
+
+docker run -d -p 8082:8080 \
+    --name part-order-service \
+    --network forvia \
+    -e SPRING_PROFILES_ACTIVE=dev \
+    -e PART_INVENTORY_SERVICE_URL=http://part-inventory-service:8080 \
+    ram1uj/part-inventory-service:latest
