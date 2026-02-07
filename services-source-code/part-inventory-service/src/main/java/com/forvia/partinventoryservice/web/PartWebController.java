@@ -33,11 +33,25 @@ public class PartWebController {
         return "index";
     }
 
+    @GetMapping("/inventory-update")
+    public String inventoryUpdate(Model model) {
+        if (!model.containsAttribute("type")) model.addAttribute("type", "success");
+        if (!model.containsAttribute("message")) model.addAttribute("message", "Operation completed.");
+        if (!model.containsAttribute("nextUrl")) model.addAttribute("nextUrl", "/inventory");
+        if (!model.containsAttribute("nextLabel")) model.addAttribute("nextLabel", "Back to Inventory");
+        return "inventory-update";
+    }
+
     @PostMapping("/parts")
-    public String addPart(@ModelAttribute Part part) {
+    public String addPart(@ModelAttribute Part part, Model model) {
         part.setId(UUID.randomUUID().toString());
         partRepository.save(part);
-        return "redirect:./";
+
+        model.addAttribute("type", "success");
+        model.addAttribute("message", "Part added successfully.");
+        model.addAttribute("nextUrl", "/inventory");
+        model.addAttribute("nextLabel", "Back to Inventory");
+        return "inventory-update";
     }
 
     @GetMapping("/parts/{id}/edit")
@@ -47,21 +61,34 @@ public class PartWebController {
             model.addAttribute("part", part.get());
             return "edit-part";
         }
-        return "redirect:./";
+
+        model.addAttribute("type", "error");
+        model.addAttribute("message", "Part not found.");
+        model.addAttribute("nextUrl", "/inventory");
+        model.addAttribute("nextLabel", "Back to Inventory");
+        return "inventory-update";
     }
 
     @PostMapping("/parts/{id}")
-    public String updatePart(@PathVariable String id, @ModelAttribute Part part) {
+    public String updatePart(@PathVariable String id, @ModelAttribute Part part, Model model) {
         part.setId(id);
         partRepository.save(part);
-        return "redirect:/";
+
+        model.addAttribute("type", "success");
+        model.addAttribute("message", "Part updated successfully.");
+        model.addAttribute("nextUrl", "/inventory");
+        model.addAttribute("nextLabel", "Back to Inventory");
+        return "inventory-update";
     }
 
     @PostMapping("/parts/{id}/delete")
-    public String deletePart(@PathVariable String id) {
+    public String deletePart(@PathVariable String id, Model model) {
         partRepository.deleteById(id);
-        return "redirect:/";
+
+        model.addAttribute("type", "success");
+        model.addAttribute("message", "Part deleted successfully.");
+        model.addAttribute("nextUrl", "/inventory");
+        model.addAttribute("nextLabel", "Back to Inventory");
+        return "inventory-update";
     }
-
-
 }
