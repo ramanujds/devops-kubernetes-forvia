@@ -16,7 +16,7 @@ spring:
             - id: part-inventory-service-direct
               uri: ${PART_INVENTORY_SERVICE_URL:http://localhost:8081}
               predicates:
-                - Path=/parts/**
+                - Path=/parts/**,/inventory-update/**
 
             - id: part-order-service-prefix
               uri: ${PART_ORDER_SERVICE_URL:http://localhost:8082}
