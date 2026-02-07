@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: part-order-service
-        image: ram1uj/part-order-service:latest
-        imagePullPolicy: IfNotPresent
+        image: ram1uj/part-order-service
+        imagePullPolicy: Never
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "dev"
