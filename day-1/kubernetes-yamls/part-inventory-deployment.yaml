@@ -25,7 +25,7 @@ spec:
               memory: "512Mi"
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "dev"
+              value: "prod"
             - name: MYSQL_HOST
               value: "mysql"
             - name: MYSQL_PORT
