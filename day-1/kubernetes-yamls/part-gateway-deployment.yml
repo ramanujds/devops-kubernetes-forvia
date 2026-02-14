@@ -18,6 +18,13 @@ spec:
         - name: part-gateway
           image: ram1uj/part-gateway-service:latest
           imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
           ports:
             - containerPort: 8080
               name: http
