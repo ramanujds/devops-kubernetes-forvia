@@ -14,28 +14,42 @@ spec:
     spec:
       containers:
         - name: part-inventory-service
-          image: ram1uj/part-inventory-service:latest
+          image: ram1uj/asset-service
           imagePullPolicy: Always
           resources:
             requests:
-              cpu: "200m"
+              cpu: "400m"
               memory: "256Mi"
             limits:
-              cpu: "500m"
+              cpu: "600m"
               memory: "512Mi"
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "prod"
+              value: "dev"
             - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_HOST
+            - name: MYSQL_HOST_1
               value: "mysql"
             - name: MYSQL_PORT
-              value: "3306"
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_PORT
             - name: MYSQL_DATABASE
               value: "part_inventory_db"
             - name: MYSQL_USER
-              value: "root"
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_USER
+                  name: mysql-secret
             - name: MYSQL_PASSWORD
-              value: "password"
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: mysql-secret
           startupProbe:
             httpGet:
               path: /actuator/health/liveness
