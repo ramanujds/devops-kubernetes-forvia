@@ -16,6 +16,13 @@ spec:
                 name: part-inventory-service
                 port:
                   number: 80
+          - path: /parts
+            pathType: Prefix
+            backend:
+              service:
+                name: part-inventory-service
+                port:
+                  number: 80
 
           - path: /orders
             pathType: Prefix
