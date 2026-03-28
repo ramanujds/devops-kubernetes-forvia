@@ -1,1 +1,5 @@
 /services-source-code/.idea/
+/day-5/terraform-aks/.terraform/
+/day-4/terraform-azure-vm/.terraform/
+/day-4/terraform-docker-container/.terraform/
+/day-4/terraform-kubernetes-local/.terraform/

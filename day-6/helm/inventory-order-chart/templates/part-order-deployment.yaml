@@ -26,6 +26,8 @@ spec:
         - name: part-order-service
           image: "{{ .Values.partOrder.image.repository }}{{- if .Values.partOrder.image.tag }}:{{ .Values.partOrder.image.tag }}{{- end }}"
           imagePullPolicy: {{ .Values.partOrder.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.partOrder.resources | nindent 12 }}
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.partOrder.env.springProfilesActive | quote }}
@@ -44,10 +46,5 @@ spec:
           ports:
             - containerPort: {{ .Values.partOrder.service.targetPort }}
               name: http
-          {{- with .Values.partOrder.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
 ---
 {{- end }}
-

@@ -12,11 +12,11 @@ RUN --mount=type=cache,target=/root/.m2 \
 
 
 # -------- Runtime stage --------
-FROM gcr.io/distroless/java25
+FROM amazoncorretto:25-jdk
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
 
-USER nonroot
+#USER nonroot
 
 ENTRYPOINT ["java","-jar", "app.jar"]

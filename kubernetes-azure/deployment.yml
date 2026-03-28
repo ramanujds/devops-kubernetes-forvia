@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      tolerations:
+        - key: "type"
+          operator: "Equal"
+          value: "critical"
+          effect: "NoSchedule"
+
+      #      affinity:
+      #        nodeAffinity:
+      #          requiredDuringSchedulingIgnoredDuringExecution:
+      #            nodeSelectorTerms:
+      #              - matchExpressions:
+      #                  - key: env
+      #                    operator: In
+      #                    values:
+      #                      - dev
+      containers:
+        - name: nginx-container
+          image: nginx:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"

@@ -1,0 +1,48 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ default "part-order-ingress" .Values.ingress.name }}
+  labels:
+    {{- include "inventory-order.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  {{- end }}
+  rules:
+    - http:
+        paths:
+          - path: /inventory
+            pathType: Prefix
+            backend:
+              service:
+                name: part-inventory-service
+                port:
+                  number: 80
+          - path: /parts
+            pathType: Prefix
+            backend:
+              service:
+                name: part-inventory-service
+                port:
+                  number: 80
+          - path: /orders
+            pathType: Prefix
+            backend:
+              service:
+                name: part-order-service
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: part-order-service
+                port:
+                  number: 80
+{{- end }}
+

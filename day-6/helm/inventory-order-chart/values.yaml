@@ -43,10 +43,11 @@ partInventory:
   image:
     repository: ram1uj/part-inventory-service
     tag: ""
-    pullPolicy: Never
+    pullPolicy: Always
   service:
     type: NodePort
-    port: 8080
+    # Azure YAML exposes port 80 -> targetPort 8080
+    port: 80
     targetPort: 8080
     nodePort: 30081
     name: part-inventory-service
@@ -57,18 +58,61 @@ partInventory:
     mysqlDatabase: part_inventory_db
     mysqlUser: root
     mysqlPassword: password
-  resources: { }
+  startupProbe:
+    enabled: true
+    httpGet:
+      path: /actuator/health/liveness
+      port: 8080
+    failureThreshold: 30
+    periodSeconds: 10
+  livenessProbe:
+    enabled: true
+    httpGet:
+      path: /actuator/health/liveness
+      port: 8080
+    initialDelaySeconds: 0
+    periodSeconds: 10
+    failureThreshold: 3
+  readinessProbe:
+    enabled: true
+    httpGet:
+      path: /actuator/health/readiness
+      port: 8080
+    periodSeconds: 5
+    failureThreshold: 3
+  resources:
+    requests:
+      cpu: "400m"
+      memory: "256Mi"
+    limits:
+      cpu: "600m"
+      memory: "512Mi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    cpu:
+      enabled: true
+      averageUtilization: 70
+    memory:
+      enabled: true
+      averageUtilization: 80
+    # requires custom metrics adapter; off by default
+    customRequestsPerSecond:
+      enabled: false
+      averageValue: "100"
 
 partOrder:
   enabled: true
   replicaCount: 1
   image:
     repository: ram1uj/part-order-service
-    tag: ""
-    pullPolicy: Never
+    tag: latest
+    pullPolicy: Always
   service:
     type: NodePort
-    port: 8080
+    # Azure YAML exposes port 80 -> targetPort 8080
+    port: 80
     targetPort: 8080
     nodePort: 30082
     name: part-order-service
@@ -79,6 +123,18 @@ partOrder:
     mysqlDatabase: part_inventory_db
     mysqlUser: root
     mysqlPassword: password
-    inventoryServiceUrl: http://part-inventory-service:8080
-  resources: { }
+    inventoryServiceUrl: http://part-inventory-service
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
 
+ingress:
+  enabled: true
+  name: part-order-ingress
+  className: nginx
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
