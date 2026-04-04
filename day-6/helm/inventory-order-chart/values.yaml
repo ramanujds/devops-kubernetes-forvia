@@ -21,7 +21,7 @@ partGateway:
     nodePort: 30080
     name: part-gateway-nodeport
   env:
-    springProfilesActive: prod
+    springProfilesActive: dev
     port: "8080"
     partInventoryServiceUrl: http://part-inventory-service:8080
     partOrderServiceUrl: http://part-order-service:8080
