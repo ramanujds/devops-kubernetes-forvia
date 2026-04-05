@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: inventory-order-app-prod
+  namespace: argocd
+spec:
+  destination:
+    namespace: default
+    server: https://forvia-r9p6sp2a.hcp.southindia.azmk8s.io:443   # AKS `cluster
+
+  #    az aks show --resource-group forvia-aks --name forvia-cluster --query "fqdn" -o tsv
+
+  source:
+    path: environments/prod/apps
+    repoURL: https://github.com/ramanujds/gitops-repo-multi-cluster
+    targetRevision: HEAD
+  sources: [ ]
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      enabled: true

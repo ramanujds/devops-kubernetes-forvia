@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: order-service-prod
+  namespace: argocd
+spec:
+  destination:
+    namespace: default
+    server: https://forvia-r9p6sp2a.hcp.southindia.azmk8s.io:443   # AKS cluster
+  sources:
+    - path: order-app-chart
+      repoURL: https://github.com/ramanujds/gitops-repo-multi-cluster
+      targetRevision: HEAD
+      helm:
+        releaseName: order-service
+        valueFiles:
+          - $values/environments/prod/values/order-values.yaml
+    - repoURL: https://github.com/ramanujds/gitops-repo-multi-cluster
+      targetRevision: HEAD
+      ref: values
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      enabled: true

@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: inventory-service-dev
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: inventory=ram1uj/part-inventory-service
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/write-back-target: helmvalues:environments/dev/values/inventory-values.yaml
+    argocd-image-updater.argoproj.io/inventory.helm.image-name: partInventory.image.repository
+    argocd-image-updater.argoproj.io/inventory.helm.image-tag: partInventory.image.tag
+    argocd-image-updater.argoproj.io/inventory.update-strategy: newest-build
+spec:
+  destination:
+    namespace: dev
+    server: https://kubernetes.default.svc
+  sources:
+    - path: inventory-app-chart
+      repoURL: https://github.com/ramanujds/gitops-repo-forvia
+      targetRevision: HEAD
+      helm:
+        releaseName: inventory-service
+        valueFiles:
+          - $values/environments/dev/values/inventory-values.yaml
+    - repoURL: https://github.com/ramanujds/gitops-repo-forvia
+      targetRevision: HEAD
+      ref: values
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      enabled: true
